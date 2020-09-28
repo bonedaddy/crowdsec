@@ -142,18 +142,7 @@ func (c *GlobalConfig) LoadSimulation() error {
 
 	rcfg, err := ioutil.ReadFile(c.ConfigPaths.SimulationFilePath)
 	if err != nil {
-		log.Errorf("simulation file '%s' doesn't exist. creating it", c.ConfigPaths.SimulationFilePath)
-		simCfg.Simulation = new(bool)
-		*simCfg.Simulation = false
-		simCfg.Exclusions = []string{}
-		newConfigSim, err := yaml.Marshal(simCfg)
-		if err != nil {
-			return fmt.Errorf("unable to marshal new simulation configuration: %s", err)
-		}
-		err = ioutil.WriteFile(c.ConfigPaths.SimulationFilePath, newConfigSim, 0644)
-		if err != nil {
-			return fmt.Errorf("unable to write new simulation config in '%s' : %s", c.ConfigPaths.SimulationFilePath, err)
-		}
+		log.Fatalf("simulation file '%s' doesn't exist. creating it", c.ConfigPaths.SimulationFilePath)
 	} else {
 		if err := yaml.UnmarshalStrict(rcfg, &simCfg); err != nil {
 			return fmt.Errorf("while unmarshaling simulation file '%s' : %s", c.ConfigPaths.SimulationFilePath, err)

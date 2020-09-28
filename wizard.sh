@@ -31,7 +31,7 @@ CSCLI_BIN="./cmd/crowdsec-cli/cscli"
 CROWDSEC_BIN_INSTALLED="/usr/local/bin/crowdsec"
 CSCLI_BIN_INSTALLED="/usr/local/bin/cscli"
 
-ACQUIS_PATH="${CROWDSEC_CONFIG_PATH}"
+ACQUIS_PATH="${CROWDSEC_PATH}"
 TMP_ACQUIS_FILE="tmp-acquis.yaml"
 ACQUIS_TARGET="${ACQUIS_PATH}/acquis.yaml"
 
@@ -44,7 +44,7 @@ PID_DIR="${CROWDSEC_RUN_DIR}"
 SYSTEMD_PATH_FILE="/etc/systemd/system/crowdsec.service"
 
 PATTERNS_FOLDER="config/patterns"
-PATTERNS_PATH="${CROWDSEC_CONFIG_PATH}/patterns/"
+PATTERNS_PATH="${CROWDSEC_PATH}/patterns/"
 
 ACTION=""
 
@@ -285,23 +285,23 @@ install_plugins_bin() {
 #install crowdsec and cscli
 install_crowdsec() {
     mkdir -p "${CROWDSEC_DATA_DIR}"
-    (cd config && find patterns -type f -exec install -Dm 644 "{}" "${CROWDSEC_CONFIG_PATH}/{}" \; && cd ../) || exit
-    mkdir -p "${CROWDSEC_CONFIG_PATH}/scenarios" || exit
-    mkdir -p "${CROWDSEC_CONFIG_PATH}/postoverflows" || exit
-    mkdir -p "${CROWDSEC_CONFIG_PATH}/collections" || exit
-    mkdir -p "${CROWDSEC_CONFIG_PATH}/patterns" || exit
+    (cd config && find patterns -type f -exec install -Dm 644 "{}" "${CROWDSEC_PATH}/{}" \; && cd ../) || exit
+    mkdir -p "${CROWDSEC_PATH}/scenarios" || exit
+    mkdir -p "${CROWDSEC_PATH}/postoverflows" || exit
+    mkdir -p "${CROWDSEC_PATH}/collections" || exit
+    mkdir -p "${CROWDSEC_PATH}/patterns" || exit
     mkdir -p "${CSCLI_FOLDER}" || exit
 
-    install -v -m 644 -D ./config/prod.yaml "${CROWDSEC_CONFIG_PATH}" || exit
-    install -v -m 644 -D ./config/dev.yaml "${CROWDSEC_CONFIG_PATH}" || exit
-    install -v -m 644 -D ./config/acquis.yaml "${CROWDSEC_CONFIG_PATH}" || exit
-    install -v -m 644 -D ./config/profiles.yaml "${CROWDSEC_CONFIG_PATH}" || exit
-    install -v -m 600 -D ./config/api.yaml "${CROWDSEC_CONFIG_PATH}" || exit
-    install -v -m 644 -D ./config/simulation.yaml "${CROWDSEC_CONFIG_PATH}" || exit
+    install -v -m 644 -D ./config/prod.yaml "${CROWDSEC_PATH}" || exit
+    install -v -m 644 -D ./config/dev.yaml "${CROWDSEC_PATH}" || exit
+    install -v -m 644 -D ./config/acquis.yaml "${CROWDSEC_PATH}" || exit
+    install -v -m 644 -D ./config/profiles.yaml "${CROWDSEC_PATH}" || exit
+    install -v -m 600 -D ./config/api.yaml "${CROWDSEC_PATH}" || exit
+    install -v -m 644 -D ./config/simulation.yaml "${CROWDSEC_PATH}" || exit
     mkdir -p ${PID_DIR} || exit
-    PID=${PID_DIR} DATA=${CROWDSEC_DATA_DIR} CFG=${CROWDSEC_CONFIG_PATH} envsubst '$CFG $PID $DATA' < ./config/prod.yaml > ${CROWDSEC_CONFIG_PATH}"/default.yaml"   
-    PID=${PID_DIR} DATA=${CROWDSEC_DATA_DIR} CFG=${CROWDSEC_CONFIG_PATH} envsubst '$CFG $PID $DATA' < ./config/user.yaml > ${CROWDSEC_CONFIG_PATH}"/user.yaml"
-    CFG=${CROWDSEC_CONFIG_PATH} PID=${PID_DIR} BIN=${CROWDSEC_BIN_INSTALLED} envsubst '$CFG $PID $BIN' < ./config/crowdsec.service > "${SYSTEMD_PATH_FILE}"
+    PID=${PID_DIR} DATA=${CROWDSEC_DATA_DIR} CFG=${CROWDSEC_PATH} envsubst '$CFG $PID $DATA' < ./config/prod.yaml > ${CROWDSEC_PATH}"/default.yaml"   
+    PID=${PID_DIR} DATA=${CROWDSEC_DATA_DIR} CFG=${CROWDSEC_PATH} envsubst '$CFG $PID $DATA' < ./config/user.yaml > ${CROWDSEC_PATH}"/user.yaml"
+    CFG=${CROWDSEC_PATH} PID=${PID_DIR} BIN=${CROWDSEC_BIN_INSTALLED} envsubst '$CFG $PID $BIN' < ./config/crowdsec.service > "${SYSTEMD_PATH_FILE}"
     install_bins
     install_plugins
 	systemctl daemon-reload
@@ -516,7 +516,7 @@ usage() {
       echo "    ./wizard.sh --binupgrade                     Upgrade crowdsec/cscli binaries"
       echo "    ./wizard.sh --upgrade                        Perform a full upgrade and try to migrate configs"
       echo "    ./wizard.sh --unattended                     Install in unattended mode, no question will be asked and defaults will be followed"
-      echo "    ./wizard.sh -r|--restore                     Restore saved configurations from ${BACKUP_DIR} to ${CROWDSEC_CONFIG_PATH}"
+      echo "    ./wizard.sh -r|--restore                     Restore saved configurations from ${BACKUP_DIR} to ${CROWDSEC_PATH}"
       echo "    ./wizard.sh -b|--backup                      Backup existing configurations to ${BACKUP_DIR}"
 
       exit 0  
