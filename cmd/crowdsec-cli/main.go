@@ -32,12 +32,6 @@ func initConfig() {
 
 	csConfig = csconfig.NewConfig()
 
-	if ConfigFilePath == "" {
-		ConfigFilePath = "/etc/crowdsec/default.yaml"
-		log.Infof("Falling back to %s", ConfigFilePath)
-	}
-
-	log.Debugf("Config folder is : %s", ConfigFilePath)
 	if err := csConfig.LoadConfigurationFile(ConfigFilePath); err != nil {
 		log.Fatalf(err.Error())
 	}
@@ -66,6 +60,7 @@ func initConfig() {
 		log.SetLevel(log.ErrorLevel)
 	}
 
+	log.Debugf("Using '%s' as config file", ConfigFilePath)
 }
 
 func main() {
@@ -115,7 +110,7 @@ API interaction:
 	}
 	rootCmd.AddCommand(cmdVersion)
 
-	rootCmd.PersistentFlags().StringVarP(&ConfigFilePath, "config", "c", "../../config/dev.yaml", "path to crowdsec config file")
+	rootCmd.PersistentFlags().StringVarP(&ConfigFilePath, "config", "c", "/etc/crowdsec/default.yaml", "path to crowdsec config file")
 	rootCmd.PersistentFlags().StringVarP(&OutputFormat, "output", "o", "", "Output format : human, json, raw.")
 	rootCmd.PersistentFlags().BoolVar(&dbg_lvl, "debug", false, "Set logging to debug.")
 	rootCmd.PersistentFlags().BoolVar(&nfo_lvl, "info", false, "Set logging to info.")
